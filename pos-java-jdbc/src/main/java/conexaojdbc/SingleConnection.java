@@ -6,10 +6,10 @@ import java.sql.DriverManager;
 //Somente essa classe será do tipo static para ela ser única.
 public class SingleConnection {
 
-	private static String url = "jdbc:postgresql://localhost:5433/posjava";
-	private static String password = "admin";
-	private static String user = "postgres";
-	private static Connection connection = null;
+	private static String url = "jdbc:postgresql://localhost:5433/posjava"; //Url do banco de dados
+	private static String password = "admin"; //Senha do banco de dados
+	private static String user = "postgres"; //Usuário do banco de dados
+	private static Connection connection = null; //Classe de conexão com o banco de dados
 
 	static {
 		conectar();
@@ -28,10 +28,9 @@ public class SingleConnection {
 			 * fazer nada, conexão tem que ser feita somente uma vez e mantida, o que irá
 			 * abrir e fechar depois são seções no banco de dados
 			 */
-			if (connection == null) {
-				//fazer carregamento do driver que irá utilizar
-				Class.forName("org.postgresql.Driver");
-				connection = DriverManager.getConnection(url, user, password);
+			if (connection == null) {// Verifica se já existe a conexão
+				Class.forName("org.postgresql.Driver");// Registra o driver do banco de dados
+				connection = DriverManager.getConnection(url, user, password);// Faz a conexão com o banco de dados
 				connection.setAutoCommit(false);//Utilizado para não salvar automáticamente
 				System.out.println("Conectou com Sucesso!");
 				
