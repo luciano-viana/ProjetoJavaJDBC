@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import conexaojdbc.SingleConnection;
+import model.BeanUserFone;
+import model.Telefone;
 import model.Userposjava;
 
 public class UserPosDAO {
@@ -19,7 +21,7 @@ public class UserPosDAO {
 		connection = SingleConnection.getConnection();
 	}
 
-	// ---------------------------------------------INSERT--------------------------------------------------------------------------
+	// ---------------------------------------------INSERT TABELA USUARIO--------------------------------------------------------------------------
 	// Método publico que não precisa retornar nada, método para fazer "Insert" no
 	// BD
 	public void salvar(Userposjava userposjava) {
@@ -42,6 +44,28 @@ public class UserPosDAO {
 			e.printStackTrace();
 		}
 
+	}
+	
+	// ---------------------------------------------INSERT TABELA TELEFONE--------------------------------------------------------------------------
+	public void salvarTelefone(Telefone telefone) {
+		try {
+			
+			String sql = "INSERT INTO telefoneuser(numero, tipo, usuariopessoa) VALUES (?,?,?)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.setString(1, telefone.getNumero());
+			preparedStatement.setString(2, telefone.getTipo());
+			preparedStatement.setLong(3, telefone.getUsuario());
+			preparedStatement.execute();
+			connection.commit();
+			
+		} catch (Exception e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
 	}
 
 	// ---------------------------------------------CONSULTA COMPLETA "SELECT *" -------------------------------------------------------
@@ -89,6 +113,40 @@ public class UserPosDAO {
 		return retorno;
 	}
 
+	// -------------------------------------------CONSULTA SÓ DE UM OBJETO "SELECT COM INNER JOIN -------------------------------------------
+	//Métido para fazer uma consulta no banco de dados entre 2 tabelas com INNER JOIN
+	public List<BeanUserFone> lisBeanUserFones(Long idUser){
+		
+		List<BeanUserFone> beanUserFones = new ArrayList<BeanUserFone>();
+		//Efeutar o inner join
+		String sql = " select nome, numero, email from telefoneuser tl ";
+		sql += " INNER JOIN userposjava uj ";
+		sql += " ON tl.usuariopessoa = uj.id ";
+		sql += " where uj.id = " + idUser;
+		
+		try {
+			//Fazer consulta no banco
+			PreparedStatement statement = connection.prepareStatement(sql);
+			ResultSet resultSet = statement.executeQuery(); //para trazer os resultados
+			
+			//Para linha vai estanciar os objetos
+			while (resultSet.next()) {
+				BeanUserFone userFone = new BeanUserFone();
+				userFone.setNome(resultSet.getString("nome"));
+				userFone.setNumero(resultSet.getString("numero"));
+				userFone.setEmail(resultSet.getString("email"));
+				
+				//Vai adicionar na lista
+				beanUserFones.add(userFone);
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return beanUserFones;
+	}
+	
 	// ----------------------------------------------------ATUALIZAR "UPDATE" ---------------------------------------------------------------
 	//Método para atualizar dados no banco de dados
 	public void atualizar(Userposjava userposjava) {// Atualizar tem que receber o objeto com os dados atualizados

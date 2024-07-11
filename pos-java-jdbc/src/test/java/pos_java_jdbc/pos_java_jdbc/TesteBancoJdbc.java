@@ -5,11 +5,13 @@ import java.util.List;
 import org.junit.Test;
 import conexaojdbc.SingleConnection;
 import dao.UserPosDAO;
+import model.BeanUserFone;
+import model.Telefone;
 import model.Userposjava;
 
 public class TesteBancoJdbc {
 
-	// -----------------------INSERT-----------------------
+	// -----------------------INSERT TABELA USUARIO-----------------------
 	// Método para chamar o SingleConnection
 	@Test
 	public void initBanco() {// metodo de insert
@@ -31,7 +33,7 @@ public class TesteBancoJdbc {
 		userPosDAO.salvar(userposjava);
 	}
 
-	// -----------------------SELECT *-----------------------
+	// -----------------------SELECT * TABELA USUARIO-----------------------
 	// Método
 	@Test
 	public void initListar() {
@@ -51,7 +53,7 @@ public class TesteBancoJdbc {
 
 	}
 
-	// -----------------------SELECT * WHERE-----------------------
+	// -----------------------SELECT * WHERE TABELA USUARIO-----------------------
 	// Método
 	@Test
 	public void initbuscar() {
@@ -66,7 +68,7 @@ public class TesteBancoJdbc {
 		}
 	}
 	
-	//-----------------------ATUALIZAR POR UPDATE-----------------------
+	//-----------------------ATUALIZAR POR UPDATE TABELA USUARIO-----------------------
 	//Método
 	@Test
 	public void initAtualizar() {
@@ -80,7 +82,7 @@ public class TesteBancoJdbc {
 		}
 	}
 	
-	//--------------------------- DELETE -------------------------------
+	//--------------------------- DELETE TABELA USUARIO -------------------------------
 	//Método
 	@Test
 	public void iniDeletar() {
@@ -91,4 +93,38 @@ public class TesteBancoJdbc {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	// -----------------------INSERT TABELA TELEFONE-----------------------
+	//Método
+	@Test
+	public void testeInsertTelefone() {
+		
+		Telefone telefone = new Telefone();
+		telefone.setNumero("(21)99599-2050");
+		telefone.setTipo("celular");
+		telefone.setUsuario(12L);//Tem que ser um id de usuário que já existe no banco de dados
+		
+		//Instanciar o objeto
+		UserPosDAO dao = new UserPosDAO();
+		dao.salvarTelefone(telefone);
+	}
+	
+	// -----------------------SELECT NAS TABELAS COM INNER JOIN-----------------------
+	//Método
+	public void testeCarregaFoneUser() {
+		
+		//precisa sempre ter um dao instanciado para acessar as camadas de persistencia
+		UserPosDAO dao = new UserPosDAO();
+		
+		//Lista para receber o retorno
+		List<BeanUserFone> beanUserFones  = dao.lisBeanUserFones(11L);
+		
+		for (BeanUserFone beanUserFone : beanUserFones) {
+			System.out.println(beanUserFone);
+			System.out.println("-------------------------------------------");
+		}
+		
+	}
+	
 }
