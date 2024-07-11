@@ -24,11 +24,12 @@ public class UserPosDAO {
 	// BD
 	public void salvar(Userposjava userposjava) {
 		try {
-			String sql = "insert into userposjava(id, nome, email) values (?,?,?)";
+			//String sql = "insert into userposjava(id, nome, email) values (?,?,?)";
+			String sql = "insert into userposjava(nome, email) values (?,?)";
 			PreparedStatement insert = connection.prepareStatement(sql); // ele que irá fazer o insert, tem toda
-			insert.setLong(1, userposjava.getId());
-			insert.setString(2, userposjava.getNome());
-			insert.setString(3, userposjava.getEmail());
+			//insert.setLong(1, userposjava.getId());
+			insert.setString(1, userposjava.getNome());
+			insert.setString(2, userposjava.getEmail());
 			insert.execute();// Utilizado para executar o insert no Banco
 			connection.commit();// Salva no Banco
 
@@ -68,6 +69,7 @@ public class UserPosDAO {
 	}
 
 	// -------------------------------------------CONSULTA SÓ DE UM OBJETO "SELECT * WHERE -----------------------------------------------
+	//Método para fazer uma consulta no banco de dados com uma condição Where
 	public Userposjava buscar(Long id) throws Exception { // Não retorna lista, somente um objeto
 		Userposjava retorno = new Userposjava();
 
@@ -88,6 +90,7 @@ public class UserPosDAO {
 	}
 
 	// ----------------------------------------------------ATUALIZAR "UPDATE" ---------------------------------------------------------------
+	//Método para atualizar dados no banco de dados
 	public void atualizar(Userposjava userposjava) {// Atualizar tem que receber o objeto com os dados atualizados
 
 		try {
@@ -109,6 +112,26 @@ public class UserPosDAO {
 			e.printStackTrace();
 		}
 
+	}
+	
+	// ---------------------------------------------------------- DELETE ---------------------------------------------------------------------
+	//Método para deletar dados no banco de dados
+	public void deletar(Long id) {
+		try {
+			
+			String sql = "delete from userposjava where id = " + id;
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			preparedStatement.execute();
+			connection.commit();
+			
+		} catch (Exception e) {
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
 	}
 
 }

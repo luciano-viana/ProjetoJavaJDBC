@@ -16,9 +16,17 @@ public class TesteBancoJdbc {
 		UserPosDAO userPosDAO = new UserPosDAO();
 		Userposjava userposjava = new Userposjava();
 
-		userposjava.setId(5L);
-		userposjava.setNome("Patricia teste");
-		userposjava.setEmail("patricia@gmail.com");
+		/*Criado no bd sequenciador de id com..
+		 * create SEQUENCE usersequence
+		   increment 1
+		   minvalue 1
+           maxvalue 9223372036854775807
+           start 6;*
+		 *alter table userposjava ALTER column id set default nextval('usersequence'::regclass);
+		 */
+		//userposjava.setId(5L);
+		userposjava.setNome("Pedro");
+		userposjava.setEmail("pedro@gmail.com");
 
 		userPosDAO.salvar(userposjava);
 	}
@@ -68,6 +76,18 @@ public class TesteBancoJdbc {
 		objetoBanco.setNome("Nome mudado com o metodo atualizar");
 		dao.atualizar(objetoBanco);
 		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//--------------------------- DELETE -------------------------------
+	//Método
+	@Test
+	public void iniDeletar() {
+		try {
+			UserPosDAO dao = new UserPosDAO();
+			dao.deletar(8L);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
