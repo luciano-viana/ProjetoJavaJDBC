@@ -27,8 +27,8 @@ public class TesteBancoJdbc {
 		 *alter table userposjava ALTER column id set default nextval('usersequence'::regclass);
 		 */
 		//userposjava.setId(5L);
-		userposjava.setNome("Pedro");
-		userposjava.setEmail("pedro@gmail.com");
+		userposjava.setNome("Pedro5");
+		userposjava.setEmail("pedro5@gmail.com");
 
 		userPosDAO.salvar(userposjava);
 	}
@@ -61,7 +61,7 @@ public class TesteBancoJdbc {
 		UserPosDAO dao = new UserPosDAO(); // Instanciar objeto UserPosDAO
 
 		try {
-			Userposjava userposjava = dao.buscar(5L); // irá retornar um objeto
+			Userposjava userposjava = dao.buscar(16L); // irá retornar um objeto
 			System.out.println(userposjava);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -112,19 +112,29 @@ public class TesteBancoJdbc {
 	
 	// -----------------------SELECT NAS TABELAS COM INNER JOIN-----------------------
 	//Método
+	@Test
 	public void testeCarregaFoneUser() {
 		
 		//precisa sempre ter um dao instanciado para acessar as camadas de persistencia
 		UserPosDAO dao = new UserPosDAO();
 		
 		//Lista para receber o retorno
-		List<BeanUserFone> beanUserFones  = dao.lisBeanUserFones(11L);
+		List<BeanUserFone> beanUserFones  = dao.lisBeanUserFones(12L);
 		
 		for (BeanUserFone beanUserFone : beanUserFones) {
 			System.out.println(beanUserFone);
-			System.out.println("-------------------------------------------");
+			System.out.println("-------------------------------------------------------------------------------------------");
 		}
 		
 	}
+	
+	//--------------------------- DELETE TABELA USUARIO COM TABELAS RELACIONADAS -------------------------------
+	//Método
+	@Test
+	public void testeDeleUserFone() {
+		UserPosDAO dao = new UserPosDAO();
+		dao.deleFonesPorUser(13L);
+	}
+	
 	
 }

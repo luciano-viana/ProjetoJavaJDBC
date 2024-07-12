@@ -192,4 +192,31 @@ public class UserPosDAO {
 		}
 	}
 
+	
+	// ---------------------------------------------------------- DELETE 2 ---------------------------------------------------------------------
+		//Método para deletar dados em tabelas que estão relacionadas com outros "Restrições de exclusão dos dados"
+	public void deleFonesPorUser(Long idUser) {
+		try {
+			
+				String sqlFone = "delete from telefoneuser where usuariopessoa = " + idUser;
+				String sqlUser = "delete from userposjava where id = " + idUser;
+				
+				PreparedStatement preparedStatement = connection.prepareStatement(sqlFone);
+				preparedStatement.executeUpdate();
+				connection.commit();
+				
+				preparedStatement = connection.prepareStatement(sqlUser);
+				preparedStatement.executeUpdate();
+				connection.commit();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+		
+	}
 }
