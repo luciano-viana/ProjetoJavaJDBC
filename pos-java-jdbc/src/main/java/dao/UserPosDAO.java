@@ -26,10 +26,10 @@ public class UserPosDAO {
 	// BD
 	public void salvar(Userposjava userposjava) {
 		try {
-			//String sql = "insert into userposjava(id, nome, email) values (?,?,?)";
+			// String sql = "insert into userposjava(id, nome, email) values (?,?,?)";
 			String sql = "insert into userposjava(nome, email) values (?,?)";
 			PreparedStatement insert = connection.prepareStatement(sql); // ele que irá fazer o insert, tem toda
-			//insert.setLong(1, userposjava.getId());
+			// insert.setLong(1, userposjava.getId());
 			insert.setString(1, userposjava.getNome());
 			insert.setString(2, userposjava.getEmail());
 			insert.execute();// Utilizado para executar o insert no Banco
@@ -45,11 +45,11 @@ public class UserPosDAO {
 		}
 
 	}
-	
+
 	// ---------------------------------------------INSERT TABELA TELEFONE--------------------------------------------------------------------------
 	public void salvarTelefone(Telefone telefone) {
 		try {
-			
+
 			String sql = "INSERT INTO telefoneuser(numero, tipo, usuariopessoa) VALUES (?,?,?)";
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, telefone.getNumero());
@@ -57,7 +57,7 @@ public class UserPosDAO {
 			preparedStatement.setLong(3, telefone.getUsuario());
 			preparedStatement.execute();
 			connection.commit();
-			
+
 		} catch (Exception e) {
 			try {
 				connection.rollback();
@@ -68,7 +68,7 @@ public class UserPosDAO {
 		}
 	}
 
-	// ---------------------------------------------CONSULTA COMPLETA "SELECT *" -------------------------------------------------------
+	// ---------------------------------------------CONSULTA COMPLETA "SELECT *"-------------------------------------------------------
 	// Método que retorna uma lista de objetos do tipo Userposjava
 	public List<Userposjava> listar() throws Exception {
 		List<Userposjava> list = new ArrayList<Userposjava>();// Instancia a lista para não dar erro
@@ -93,7 +93,7 @@ public class UserPosDAO {
 	}
 
 	// -------------------------------------------CONSULTA SÓ DE UM OBJETO "SELECT * WHERE -----------------------------------------------
-	//Método para fazer uma consulta no banco de dados com uma condição Where
+	// Método para fazer uma consulta no banco de dados com uma condição Where
 	public Userposjava buscar(Long id) throws Exception { // Não retorna lista, somente um objeto
 		Userposjava retorno = new Userposjava();
 
@@ -114,41 +114,42 @@ public class UserPosDAO {
 	}
 
 	// -------------------------------------------CONSULTA SÓ DE UM OBJETO "SELECT COM INNER JOIN -------------------------------------------
-	//Métido para fazer uma consulta no banco de dados entre 2 tabelas com INNER JOIN
-	public List<BeanUserFone> lisBeanUserFones(Long idUser){
-		
+	// Métido para fazer uma consulta no banco de dados entre 2 tabelas com INNER
+	// JOIN
+	public List<BeanUserFone> lisBeanUserFones(Long idUser) {
+
 		List<BeanUserFone> beanUserFones = new ArrayList<BeanUserFone>();
-		//Efeutar o inner join
+		// Efeutar o inner join
 		String sql = " select nome, numero, email from telefoneuser tl ";
 		sql += " INNER JOIN userposjava uj ";
 		sql += " ON tl.usuariopessoa = uj.id ";
 		sql += " where uj.id = " + idUser;
-		
+
 		try {
-			//Fazer consulta no banco
+			// Fazer consulta no banco
 			PreparedStatement statement = connection.prepareStatement(sql);
-			ResultSet resultSet = statement.executeQuery(); //para trazer os resultados
-			
-			//Para linha vai estanciar os objetos
+			ResultSet resultSet = statement.executeQuery(); // para trazer os resultados
+
+			// Para linha vai estanciar os objetos
 			while (resultSet.next()) {
 				BeanUserFone userFone = new BeanUserFone();
 				userFone.setNome(resultSet.getString("nome"));
 				userFone.setNumero(resultSet.getString("numero"));
 				userFone.setEmail(resultSet.getString("email"));
-				
-				//Vai adicionar na lista
+
+				// Vai adicionar na lista
 				beanUserFones.add(userFone);
 			}
-			
-		}catch (Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return beanUserFones;
 	}
-	
+
 	// ----------------------------------------------------ATUALIZAR "UPDATE" ---------------------------------------------------------------
-	//Método para atualizar dados no banco de dados
+	// Método para atualizar dados no banco de dados
 	public void atualizar(Userposjava userposjava) {// Atualizar tem que receber o objeto com os dados atualizados
 
 		try {
@@ -171,17 +172,17 @@ public class UserPosDAO {
 		}
 
 	}
-	
+
 	// ---------------------------------------------------------- DELETE ---------------------------------------------------------------------
-	//Método para deletar dados no banco de dados
+	// Método para deletar dados no banco de dados
 	public void deletar(Long id) {
 		try {
-			
+
 			String sql = "delete from userposjava where id = " + id;
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.execute();
 			connection.commit();
-			
+
 		} catch (Exception e) {
 			try {
 				connection.rollback();
@@ -192,23 +193,23 @@ public class UserPosDAO {
 		}
 	}
 
-	
 	// ---------------------------------------------------------- DELETE 2 ---------------------------------------------------------------------
-		//Método para deletar dados em tabelas que estão relacionadas com outros "Restrições de exclusão dos dados"
+	// Método para deletar dados em tabelas que estão relacionadas com outros
+	// "Restrições de exclusão dos dados"
 	public void deleFonesPorUser(Long idUser) {
 		try {
-			
-				String sqlFone = "delete from telefoneuser where usuariopessoa = " + idUser;
-				String sqlUser = "delete from userposjava where id = " + idUser;
-				
-				PreparedStatement preparedStatement = connection.prepareStatement(sqlFone);
-				preparedStatement.executeUpdate();
-				connection.commit();
-				
-				preparedStatement = connection.prepareStatement(sqlUser);
-				preparedStatement.executeUpdate();
-				connection.commit();
-			
+
+			String sqlFone = "delete from telefoneuser where usuariopessoa = " + idUser;
+			String sqlUser = "delete from userposjava where id = " + idUser;
+
+			PreparedStatement preparedStatement = connection.prepareStatement(sqlFone);
+			preparedStatement.executeUpdate();
+			connection.commit();
+
+			preparedStatement = connection.prepareStatement(sqlUser);
+			preparedStatement.executeUpdate();
+			connection.commit();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
@@ -217,6 +218,6 @@ public class UserPosDAO {
 				e1.printStackTrace();
 			}
 		}
-		
+
 	}
 }
